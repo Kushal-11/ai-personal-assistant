@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Personalized News</title>
+</head>
+<body>
+    <h1>Personalized News</h1>
+    <form id="interests-form">
+        <p>Select your interests:</p>
+        <div>
+            <input type="checkbox" id="technology" name="interests" value="technology">
+            <label for="technology">Technology</label>
+        </div>
+        <div>
+            <input type="checkbox" id="sports" name="interests" value="sports">
+            <label for="sports">Sports</label>
+        </div>
+        <div>
+            <input type="checkbox" id="politics" name="interests" value="politics">
+            <label for="politics">Politics</label>
+        </div>
+        <div>
+            <input type="checkbox" id="business" name="interests" value="business">
+            <label for="business">Business</label>
+        </div>
+        <div>
+            <input type="checkbox" id="entertainment" name="interests" value="entertainment">
+            <label for="entertainment">Entertainment</label>
+        </div>
+        <div>
+            <input type="checkbox" id="health" name="interests" value="health">
+            <label for="health">Health</label>
+        </div>
+        <div>
+            <input type="checkbox" id="science" name="interests" value="science">
+            <label for="science">Science</label>
+        </div>
+        <div>
+            <input type="checkbox" id="travel" name="interests" value="travel">
+            <label for="travel">Travel</label>
+        </div>
+        <!-- Add more checkboxes for other interests as needed -->
+        <input type="submit" value="Get News">
+    </form>
+    <div id="news-articles"></div>
+    <script>
+        document.getElementById('interests-form').onsubmit = async function(event) {
+            event.preventDefault();
+            const interestsElements = document.querySelectorAll('input[name="interests"]:checked');
+            const interests = Array.from(interestsElements).map(element => element.value);
+
+            try {
+                const response = await fetch('/news', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ interests }),
+                });
+                const data = await response.json();
+                const articlesContainer = document.getElementById('news-articles');
+                articlesContainer.innerHTML = data.articles.map(article => `
+                    <h2>${article.title}</h2>
+                    <p>${article.description}</p>
+                    <a href="${article.url}" target="_blank">Read more</a>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching news:', error);
+            }
+        };
+    </script>
+</body>
+</html>

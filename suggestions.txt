@@ -1,0 +1,11 @@
+# Meet1 #
+Suggestions:
+
+When you name endpoints, always follow python and REST api naming standards for var, funcs, api etc
+Explore httpx
+Investigate Blocking io vs non blocking io
+Add docstrings
+React would be great on the frontend
+Make an elevator pitch
+Make a technical documentation
+

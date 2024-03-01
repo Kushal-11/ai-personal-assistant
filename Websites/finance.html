@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Finance Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Your Finance Data</h2>
+    <h3>Account Balances</h3>
+    <table id="balances">
+        <tr>
+            <th>Account Type</th>
+            <th>Balance</th>
+        </tr>
+    </table>
+    <h3>Transactions</h3>
+    <table id="transactions">
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+        </tr>
+    </table>
+    <button onclick="getFinanceData()">Get My Finance Data</button>
+    <script>
+        function getFinanceData() {
+            fetch('http://127.0.0.1:8000/finances')
+                .then(response => response.json())
+                .then(data => {
+                    const balancesTable = document.getElementById('balances');
+                    // Clear the table
+                    for(let i = balancesTable.rows.length - 1; i > 0; i--) {
+                        balancesTable.deleteRow(i);
+                    }
+                    data.balances.forEach(balance => {
+                        const row = balancesTable.insertRow(-1);
+                        const cell1 = row.insertCell(0);
+                        const cell2 = row.insertCell(1);
+                        cell1.textContent = balance.account_type;
+                        cell2.textContent = balance.balance;
+                    });
+
+                    const transactionsTable = document.getElementById('transactions');
+                    // Clear the table
+                    for(let i = transactionsTable.rows.length - 1; i > 0; i--) {
+                        transactionsTable.deleteRow(i);
+                    }
+                    data.transactions.forEach(transaction => {
+                        const row = transactionsTable.insertRow(-1);
+                        const cell1 = row.insertCell(0);
+                        const cell2 = row.insertCell(1);
+                        const cell3 = row.insertCell(2);
+                        const cell4 = row.insertCell(3);
+                        cell1.textContent = transaction.date;
+                        cell2.textContent = transaction.description;
+                        cell3.textContent = transaction.amount;
+                        cell4.textContent = transaction.category;
+                    });
+                })
+                .catch(error => console.error('Error fetching finance data:', error));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+1. 3 Ways to Make a Custom AI Assistant | RAG, Tools, & Fine-tuning
+https://www.youtube.com/watch?v=4RAvJt3fWoI
+
+2. Building Production-Ready RAG Applications: Jerry Liu
+https://www.youtube.com/watch?v=TRjq7t2Ms5I
+
+3. Retrieval-Augmented Generation(RAG) using open source LLMs.
+https://medium.com/@yakkalakartheek/retrieval-augmented-generation-rag-using-open-source-llms-805184b0fe58
+
+4. An article on "Personal Assistant AI"
+https://itexus.com/glossary/personal-assistant-ai/#:~:text=Furthermore%2C%20Personal%20Assistant%20AI%20leverages,suggesting%20relevant%20information%20or%20services.
+
+
+
+
+
+
