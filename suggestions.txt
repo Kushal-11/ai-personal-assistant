@@ -2,10 +2,13 @@
 Suggestions:
 
 When you name endpoints, always follow python and REST api naming standards for var, funcs, api etc
-Explore httpx
+Explore httpx over requests library
 Investigate Blocking io vs non blocking io
 Add docstrings
 React would be great on the frontend
 Make an elevator pitch
 Make a technical documentation
 
+IMP: have business requirements presentation or doc
+Use swagger
+When you generate code on generative ai, first of all try to understand the logic.

@@ -72,8 +72,7 @@ class FitnessData(BaseModel):
 
 # Function to calculate calories burned
 def calculate_calories_burned(activity, duration, weight):
-    # This is a placeholder for your calculation logic.
-    # You will replace it with your own logic based on the activity.
+
     MET_values = {"running": 10, "cycling": 8}  # MET values for activities
     calories_burned = (MET_values[activity] * 3.5 * weight / 2.2 / 60) * duration
     source = "Compendium of Physical Activities"
@@ -154,4 +153,4 @@ async def calculate_calories(data: FitnessData):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.5", port=8000)
+    uvicorn.run(app, host="127.0.0.5", port=8000, reload=True)
