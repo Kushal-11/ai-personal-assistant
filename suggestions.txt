@@ -12,3 +12,10 @@ Make a technical documentation
 IMP: have business requirements presentation or doc
 Use swagger
 When you generate code on generative ai, first of all try to understand the logic.
+
+
+# Meet 2 #
+Suggestions:
+For new summary: get a better strategy to rank the articles
+Think about tf idf: https://en.wikipedia.org/wiki/Tf%E2%80%93idf
+Topic modelling

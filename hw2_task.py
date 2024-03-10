@@ -1,6 +1,8 @@
 import os
 import json
 
+import html
+
 # now that i have the summaries, i need to define a criteria in a flat file in order to rank the summaries
 
 """
@@ -54,4 +56,18 @@ print("--------------")
 for file, score in file_scores[:3]:
     print(f"Filename: {file}")
     print(f"Justification: This file has a score of {score} which is one of the highest scores among all the files.")
-    print()
+    print('\n')
+
+# Making an HTML file
+html_content = "<h1>News Summary</h1>"
+for file, score in file_scores[:3]:
+    with open(f"news_summaries/{file}", "r", encoding='utf-8') as f:
+
+        content = f.read().split("\n\n")[1]
+
+        html_content += f"<h2>{file}</h2>"
+        html_content += f"<p>{content}</p>"
+
+with open("Websites/news_summary.html", "w", encoding='utf-8') as file:
+    file.write(html_content)
+
