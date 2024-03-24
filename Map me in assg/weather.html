@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <style>
+        #map { height: 400px; width: 100%; }
+    </style>
+</head>
+<body>
+    <h2>Your Weather</h2>
+    <p>I am planning to add icons within a 50-mile radius from the user's location, which I am working on integrating with
+        my main project of AI powered Personal Assistant.
+    </p>
+    <button onclick="getWeather()">Get My Weather</button>
+    <p id="weatherData"></p>
+    <div id="map"></div>
+
+    <script>
+        let map;
+
+        function initMap(lat = 0, lng = 0) {
+            // Initialize map with a default location (e.g., lat 0, lng 0)
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat, lng},
+                zoom: 8
+            });
+        }
+
+        function addWeatherMarker(lat, lng, weatherInfo) {
+            // Creating a marker for the map using the weather information
+
+            const weather_description = weatherInfo.description;
+            const icon_code = weatherInfo.icon;
+            const icon_url = `https://openweathermap.org/img/wn/${icon_code}@2x.png`; // Construct icon URL
+
+            const marker = new google.maps.Marker({
+                position: { lat, lng },
+                map: map,
+                title: `Weather: ${weather_description}`,
+                icon: icon_url // Use the icon URL
+            });
+
+            // Creating an info window for the marker
+            const infowindow = new google.maps.InfoWindow({
+                content: `<div><h3>${weatherInfo.city}</h3><p>${weatherInfo.description}, ${weatherInfo.temperature}°C</p></div>`
+            });
+
+
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
+        }
+
+        function getWeather() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {
+                const { latitude, longitude } = position.coords;
+
+                fetch(`/weather?lat=${latitude}&lon=${longitude}`)
+                    .then(response => response.json())
+                    .then(weatherInfo => {
+                        document.getElementById('weatherData').textContent = `Weather: ${weatherInfo.description}, Temperature: ${weatherInfo.temperature}°C, City: ${weatherInfo.city}`;
+
+                        // Fetch the Google Maps API key and initialize the map
+                        fetch('/config')
+                            .then(response => response.json())
+                            .then(config => {
+                                loadGoogleMapsAPI(config.googleMapsApiKey, () => {
+                                    initMap(latitude, longitude); // Initialize map with user location
+                                    addWeatherMarker(latitude, longitude, weatherInfo); // Add marker with weather info
+                                });
+                            })
+                            .catch(error => console.error('Error fetching API key:', error));
+                    })
+                    .catch(error => console.error('Error fetching weather:', error));
+            }, error => {
+                alert('Unable to retrieve your location');
+            });
+        }
+
+        function loadGoogleMapsAPI(key, callback) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=callback`;
+            script.async = true;
+            script.defer = true;
+            window.callback = callback;
+            document.head.appendChild(script);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map of Interests</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2>Map of Interests</h2>
+    <div id="map"></div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0aMzf8eKFirMw1jWPM9l3lCiZLNW_dMU&callback=initMap" async defer></script>
+    <script>
+        let map;
+
+        function initMap() {
+            // Default location to initialize the map
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
+
+            fetchAndPlotLocations(); // Call the function to plot locations
+        }
+
+        async function fetchAndPlotLocations() {
+            const response = await fetch('/static/locations.json');
+            const locations = await response.json();
+
+            locations.forEach(location => {
+                const { lat, lng } = location.geometry.location;
+                const marker = new google.maps.Marker({
+                    position: {lat, lng},
+                    map: map,
+                    title: location.name
+                });
+            });
+        }
+    </script>
+</body>
+</html>

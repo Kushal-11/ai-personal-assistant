@@ -9,8 +9,7 @@ import os
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from pydantic import BaseModel
-
-
+import requests
 
 
 # Load the .env file
@@ -19,6 +18,7 @@ load_dotenv()
 # Access your API keys
 weather_api_key = os.getenv('WEATHER_API_KEY')
 news_api_key = os.getenv('NEWS_API_KEY')
+maps_api_key = os.getenv('GOOGLE_MAPS_API_KEY')
 app = FastAPI()
 
 app.add_middleware(
@@ -93,6 +93,17 @@ async def root():
         html_content = f.read()
     return HTMLResponse(content=html_content, status_code=200)
 
+@app.get("/map")
+async def get_map(lat: float, lon: float, city: str):
+
+    map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lon}&zoom=12&size=400x400&markers=color:red%7Clabel:C%7C{lat},{lon}&key={maps_api_key}"
+
+    response = requests.get(map_url)
+
+    if response.status_code == 200:
+        return response.content  # Directly return the image content
+    else:
+        raise HTTPException(status_code=400, detail="Error fetching map image")
 
 @app.get("/weather")
 async def get_weather(lat: float, lon: float):
@@ -103,17 +114,21 @@ async def get_weather(lat: float, lon: float):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(weather_url)
-        print(f"OpenWeatherMap API Status Code: {response.status_code}")
-        print(f"OpenWeatherMap API Response Body: {response.text}")
+
         if response.status_code == 200:
             data = response.json()
+            # Generate the map image URL
+            map_url = f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lon}&zoom=12&size=400x400&markers=color:red%7Clabel:C%7C{lat},{lon}&key={maps_api_key}"
             weather = {
                 "temperature": data["main"]["temp"],
                 "description": data["weather"][0]["description"],
                 "city": data["name"],
                 "country": data["sys"]["country"],
+                "map_url": map_url
             }
             return weather
+
+
         else:
             raise HTTPException(status_code=404, detail="Weather data not found")
 
@@ -153,4 +168,4 @@ async def calculate_calories(data: FitnessData):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.5", port=8000, reload=True)
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
